@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revenue Multiplier Scorecard — How much of a revenue multiplier is your marketing?</title>
+<meta name="description" content="A free 2-minute scorecard based on the book “Marketing as a Revenue Multiplier” by Volodymyr Khomichenko. Answer quick yes/no rounds and see your revenue multiplier, archetype, and what to build next." />
+<meta property="og:title" content="Revenue Multiplier Scorecard" />
+<meta property="og:description" content="How much of a revenue multiplier is your marketing? A free 2-minute check based on the book by Volodymyr Khomichenko." />
+<meta property="og:type" content="website" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#141922; --muted:#616b7a; --line:#e3e7ec;
+    --paper:#eef1f5; --card:#ffffff;
+    --blue:#2563eb; --blue-bright:#5b8bff;
+    --gray-mark:#c3cbd6; --warn:#3a4150;
+    --sans:"Inter",system-ui,-apple-system,sans-serif; --serif:"Fraunces",Georgia,serif; --mono:"Space Mono",monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:var(--paper); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:clamp(18px,2.6vw,32px) clamp(16px,3vw,36px); }
+
+  .book-banner{ display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:11px 16px; margin-bottom:clamp(14px,2vw,20px); font-size:13.5px; color:var(--muted); line-height:1.45; box-shadow:0 10px 26px -24px rgba(20,25,34,.4); }
+  .book-banner .bx{ font-family:var(--serif); font-weight:600; font-size:22px; color:var(--blue); line-height:1; flex-shrink:0; }
+  .book-banner b{ color:var(--ink); font-weight:600; }
+  .book-banner a{ color:var(--blue); font-weight:600; text-decoration:none; white-space:nowrap; }
+  .book-banner a:hover{ text-decoration:underline; }
+
+  .eyebrow{ font-weight:600; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); display:flex; align-items:center; gap:9px; }
+  .eyebrow .x{ font-family:var(--serif); font-size:19px; transform:translateY(1px); }
+  .headline{ font-family:var(--serif); font-weight:500; font-size:clamp(24px,3.3vw,36px); line-height:1.05; letter-spacing:-.015em; max-width:22ch; margin-top:10px; }
+  .headline em{ font-style:italic; color:var(--blue); }
+  .subhead{ color:var(--muted); font-size:15px; line-height:1.5; margin-top:8px; max-width:56ch; }
+  .subhead b{ color:var(--ink); font-weight:600; }
+
+  .stage{ display:grid; grid-template-columns:0.94fr 1.06fr; gap:clamp(18px,2.6vw,34px); align-items:start; margin-top:clamp(20px,3vw,30px); }
+  .rcol{ min-width:0; }
+
+  .tabs{ display:flex; gap:6px; overflow-x:auto; padding-bottom:12px; margin-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .tabs::-webkit-scrollbar{ height:5px; } .tabs::-webkit-scrollbar-thumb{ background:var(--line); border-radius:9px; }
+  .tab{ flex:0 0 auto; font-weight:600; font-size:12.5px; padding:8px 13px; border:1.5px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .13s ease; display:flex; align-items:center; gap:6px; }
+  .tab:hover{ border-color:var(--blue); color:var(--ink); }
+  .tab.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .tab.result{ border-color:var(--blue); color:var(--blue); }
+  .tab.result.active{ background:var(--blue); color:#fff; }
+  .tab .dot{ width:6px; height:6px; border-radius:50%; background:var(--blue); }
+  .tab.active .dot{ background:#fff; }
+
+  .quick{ display:flex; align-items:center; gap:8px; margin:-4px 0 16px; flex-wrap:wrap; }
+  .quick span{ font-size:12px; color:var(--muted); font-weight:500; }
+  .qbtn{ font-weight:600; font-size:12px; padding:6px 13px; border:1.5px solid var(--line); border-radius:999px; background:#fff; color:var(--ink); cursor:pointer; transition:all .13s ease; }
+  .qbtn:hover{ border-color:var(--blue); color:var(--blue); }
+
+  .left{ position:sticky; top:22px; display:flex; flex-direction:column; gap:14px; }
+  .shapes-card{ background:var(--card); border:1px solid var(--line); border-radius:22px; padding:16px 16px 10px; box-shadow:0 18px 44px -34px rgba(20,25,34,.4); }
+  .build-head{ display:flex; justify-content:space-between; align-items:baseline; padding:0 4px 6px; }
+  .bh-lbl{ font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .bh-num{ font-family:var(--serif); font-weight:600; font-size:30px; line-height:1; }
+  .bh-num small{ font-family:var(--mono); font-size:12px; color:var(--muted); font-weight:400; }
+  .shapes-svg{ width:100%; height:auto; display:block; }
+  .progress-track{ height:7px; border-radius:999px; background:#e0e4ea; overflow:hidden; margin-top:4px; }
+  .progress-track > span{ display:block; height:100%; background:linear-gradient(90deg,var(--blue),var(--blue-bright)); border-radius:999px; width:0%; transition:width .3s ease; }
+  .progress-meta{ display:flex; justify-content:space-between; margin-top:7px; font-size:12px; color:var(--muted); font-weight:500; padding:0 2px; }
+  .progress-meta b{ color:var(--blue); font-weight:700; }
+
+  .mult-card{ background:var(--card); border:1px solid var(--line); border-radius:22px; padding:18px 20px; box-shadow:0 18px 44px -34px rgba(20,25,34,.4); }
+  .mult-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .mult-cap{ font-weight:600; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .mult-state{ font-weight:700; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--blue); }
+  .mult-big{ font-family:var(--serif); font-weight:600; font-size:58px; line-height:1; letter-spacing:-.02em; margin-top:2px; }
+  .mult-big .x{ color:var(--blue); }
+  .mult-sub{ font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:4px; }
+  .mult-sub .bad{ color:var(--warn); font-weight:700; }
+  .io{ margin-top:14px; }
+  .io-row{ display:flex; align-items:center; gap:10px; margin:6px 0; }
+  .io-lbl{ font-family:var(--mono); font-size:10.5px; color:var(--muted); width:58px; flex-shrink:0; }
+  .io-bar{ height:18px; border-radius:6px; transition:width .25s ease; }
+  .io-bar.in{ background:var(--gray-mark); }
+  .io-bar.out{ background:var(--blue); }
+  .io-amt{ font-family:var(--mono); font-size:12px; font-weight:700; }
+  .mult-note{ font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.4; }
+  .mult-note b{ color:var(--ink); font-weight:600; }
+
+  .shape-val{ font-family:var(--serif); font-weight:600; font-size:16px; fill:#141922; paint-order:stroke; stroke:#fff; stroke-width:2.6px; }
+  .shape-name{ font-family:var(--sans); font-weight:600; font-size:12px; fill:#141922; }
+
+  .panel{ min-height:430px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:22px; padding:clamp(18px,2.4vw,26px); box-shadow:0 20px 50px -38px rgba(20,25,34,.35); }
+  .step-eyebrow{ display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:12px; letter-spacing:.04em; color:var(--muted); text-transform:uppercase; }
+  .step-eyebrow .st b{ color:var(--blue); }
+  .pill-count{ background:var(--paper); color:var(--muted); padding:4px 11px; border-radius:999px; font-size:11px; }
+  .block-name{ font-family:var(--serif); font-weight:500; font-size:29px; margin-top:12px; display:flex; align-items:baseline; gap:12px; letter-spacing:-.01em; }
+  .block-name .num{ font-weight:700; font-size:15px; color:#fff; background:var(--blue); border-radius:8px; padding:2px 9px; }
+  .block-name .num.rf{ background:var(--warn); }
+  .block-mean{ color:var(--muted); font-size:15.5px; margin-top:6px; margin-bottom:18px; }
+
+  .q{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .q:last-of-type{ border-bottom:none; }
+  .q-text{ font-size:16.5px; line-height:1.35; font-weight:450; max-width:38ch; }
+  .toggle{ display:flex; gap:8px; flex-shrink:0; }
+  .toggle button{ font-weight:600; font-size:14px; min-width:78px; height:46px; padding:0 16px; border:1.5px solid var(--line); border-radius:14px; background:#fff; color:var(--muted); cursor:pointer; transition:all .13s ease; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .toggle button .ic{ font-size:13px; opacity:.85; }
+  .toggle button:hover{ border-color:var(--blue); color:var(--ink); transform:translateY(-1px); }
+  .toggle button.yes.on{ background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 6px 16px -6px rgba(37,99,235,.7); }
+  .toggle button.no.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .toggle.rf button.yes.on{ background:var(--warn); border-color:var(--warn); color:#fff; box-shadow:0 6px 16px -6px rgba(58,65,80,.6); }
+  .toggle.rf button.no.on{ background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:none; }
+  .toggle button:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:22px; gap:12px; }
+  .btn{ font-weight:600; font-size:14px; padding:13px 26px; border-radius:14px; cursor:pointer; border:1.5px solid var(--ink); background:var(--ink); color:#fff; transition:all .14s ease; }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px -12px rgba(20,25,34,.5); }
+  .btn.ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn.ghost:hover{ border-color:var(--ink); box-shadow:none; }
+  .btn.ghost:disabled{ opacity:.32; cursor:default; transform:none; }
+  .btn.primary{ background:var(--blue); border-color:var(--blue); }
+  .btn.primary:hover{ background:var(--blue-bright); border-color:var(--blue-bright); }
+
+  .final-arche{ font-weight:600; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); }
+  .final-title{ font-family:var(--serif); font-weight:500; font-size:32px; margin:8px 0 4px; letter-spacing:-.01em; }
+  .final-line{ color:var(--muted); font-size:15.5px; line-height:1.5; margin-bottom:22px; max-width:46ch; }
+  .final-line b{ color:var(--ink); font-weight:600; }
+  .disclaimer{ font-size:12.5px; color:var(--muted); margin:-8px 0 18px; padding:8px 12px; background:var(--paper); border-radius:10px; }
+  .recs h3{ font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:13px; }
+  .rec{ display:flex; gap:13px; align-items:flex-start; margin-bottom:14px; }
+  .rec-badge{ font-size:12px; font-weight:700; color:#fff; background:var(--blue); border-radius:9px; padding:4px 9px; flex-shrink:0; min-width:38px; text-align:center; }
+  .rec-badge.stop{ background:var(--warn); }
+  .rec-name{ font-family:var(--serif); font-weight:600; font-size:16px; }
+  .rec-play{ color:var(--muted); font-size:14.5px; line-height:1.4; }
+  .final-cta{ display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+
+  /* expandable full report */
+  .more-btn{ width:100%; margin-top:18px; font-weight:600; font-size:13px; padding:12px; border-radius:14px; cursor:pointer; border:1.5px dashed var(--line); background:var(--paper); color:var(--ink); transition:all .14s ease; }
+  .more-btn:hover{ border-color:var(--blue); color:var(--blue); }
+  .full{ overflow:hidden; max-height:0; transition:max-height .45s ease; }
+  .full.open{ max-height:2600px; }
+  .full-inner{ padding-top:20px; margin-top:20px; border-top:1px solid var(--line); }
+  .rep-h3{ font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:20px 0 12px; }
+  .rep-h3:first-child{ margin-top:0; }
+  .crow{ margin-bottom:14px; }
+  .crow-top{ display:flex; align-items:center; gap:10px; }
+  .crow-nm{ font-family:var(--serif); font-weight:600; font-size:16px; }
+  .ctag{ font-family:var(--sans); font-weight:700; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:6px; }
+  .ctag.good{ background:#e4edff; color:var(--blue); }
+  .ctag.mid{ background:var(--paper); color:var(--muted); }
+  .ctag.warn{ background:#e7e9ee; color:var(--warn); }
+  .cscore{ margin-left:auto; font-family:var(--mono); font-size:12px; font-weight:700; color:var(--muted); }
+  .cbar{ height:5px; border-radius:999px; background:#e0e4ea; overflow:hidden; margin:6px 0 5px; }
+  .cbar > span{ display:block; height:100%; border-radius:999px; }
+  .ctext{ font-size:13.5px; color:var(--muted); line-height:1.4; }
+  .fix{ display:flex; gap:10px; margin-bottom:11px; }
+  .fix-ic{ color:var(--warn); font-weight:700; flex-shrink:0; }
+  .fix b{ color:var(--ink); font-weight:600; }
+  .fix span.f2{ color:var(--muted); }
+  .mm{ font-size:14px; color:var(--muted); line-height:1.5; }
+  .mm b{ color:var(--ink); font-weight:600; }
+
+  .email-cta{ margin-top:22px; padding:18px; border-radius:16px; background:var(--paper); border:1px solid var(--line); }
+  .ec-title{ font-family:var(--serif); font-weight:500; font-size:19px; }
+  .ec-sub{ color:var(--muted); font-size:13.5px; margin-top:3px; }
+  .ec-row{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .ec-row input{ flex:1; min-width:200px; height:46px; padding:0 14px; border:1.5px solid var(--line); border-radius:12px; font-family:var(--sans); font-size:14px; color:var(--ink); background:#fff; }
+  .ec-row input:focus{ outline:none; border-color:var(--blue); }
+  .ec-consent{ display:flex; gap:9px; align-items:flex-start; margin-top:12px; font-size:12.5px; color:var(--muted); line-height:1.4; cursor:pointer; }
+  .ec-consent input{ width:17px; height:17px; margin-top:1px; accent-color:var(--blue); flex-shrink:0; cursor:pointer; }
+  .ec-done{ font-size:14px; color:var(--ink); font-weight:500; }
+  .ec-done b{ color:var(--blue); }
+  .btn:disabled{ opacity:.4; cursor:default; transform:none; box-shadow:none; }
+
+  .foot{ margin-top:28px; font-size:11.5px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; border-top:1px solid var(--line); padding-top:16px; }
+  .foot .tag{ color:var(--blue); font-weight:600; }
+
+  @media (max-width:840px){
+    .stage{ grid-template-columns:1fr; }
+    .left{ position:static; }
+    .shapes-svg{ max-width:380px; margin:0 auto; }
+  }
+  @media (max-width:520px){
+    .wrap{ padding:14px 14px 20px; }
+    .book-banner{ font-size:12.5px; padding:10px 13px; gap:10px; }
+    .headline{ font-size:23px; }
+    .subhead{ font-size:14px; }
+    .card{ border-radius:16px; padding:16px 14px; }
+    .shapes-card, .mult-card{ border-radius:16px; }
+    .block-name{ font-size:24px; }
+    .q{ flex-direction:column; align-items:stretch; gap:9px; padding:12px 0; }
+    .q-text{ max-width:none; font-size:15.5px; }
+    .toggle{ width:100%; }
+    .toggle button{ flex:1; min-width:0; }
+    .nav{ flex-wrap:wrap; }
+    .nav .btn{ flex:1; text-align:center; padding:13px 14px; }
+    .mult-big{ font-size:46px; }
+    .ec-row{ flex-direction:column; }
+    .ec-row input{ min-width:0; width:100%; }
+    .ec-row .btn{ width:100%; }
+    .final-title{ font-size:26px; }
+    .tabs{ margin-left:-14px; margin-right:-14px; padding-left:14px; padding-right:14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="book-banner"><span class="bx">×</span><span>This scorecard is built on the framework from the book <b>“Marketing as a Revenue Multiplier”</b> by Volodymyr Khomichenko. To understand the full logic behind your result, I recommend reading the book. <a href="#" id="bookLink">About the book →</a></span></div>
+
+  <div class="eyebrow"><span class="x">×</span> The Scorecard</div>
+  <h1 class="headline">How much of a revenue <em>multiplier</em> is your marketing?</h1>
+  <p class="subhead">Six quick rounds of <b>Yes/No</b>, then the <b>red flags</b> that quietly drag you down. Watch your multiplier swing from a cost to a compounding machine.</p>
+
+  <div class="stage">
+
+    <div class="left">
+      <div class="shapes-card">
+        <div class="build-head"><span class="bh-lbl">Build score</span><span class="bh-num" id="buildNum">0<small> / 100</small></span></div>
+        <svg class="shapes-svg" id="shapes" viewBox="0 0 360 300" role="img" aria-label="Your six marketing components, each a shape that fills up"></svg>
+        <div class="progress-track"><span id="progBar"></span></div>
+        <div class="progress-meta"><span id="progText"><b>0</b>/30 answered</span><span>Tap a shape to jump</span></div>
+      </div>
+
+      <div class="mult-card">
+        <div class="mult-head"><span class="mult-cap">Your revenue multiplier</span><span class="mult-state" id="multState">Cost — losing</span></div>
+        <div class="mult-big"><span class="x">×</span><span id="multNum">0.2</span></div>
+        <div class="mult-sub" id="multSub">build ×0.2 · trust ✓ clean</div>
+        <div class="io">
+          <div class="io-row"><span class="io-lbl">$1 spend</span><div class="io-bar in" style="width:38px"></div></div>
+          <div class="io-row"><span class="io-lbl">return</span><div class="io-bar out" id="outBar" style="width:8px"></div><span class="io-amt" id="outAmt">$0.20</span></div>
+        </div>
+        <div class="mult-note" id="multNote">Answer the rounds to build it up — a great marketing engine can return many times what you put in.</div>
+      </div>
+    </div>
+
+    <div class="rcol">
+      <div class="tabs" id="tabs"></div>
+      <div class="panel" id="panel"></div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>Revenue Multiplier Scorecard · <span class="tag">v0.14</span></span>
+    <span>Marketing as a Revenue Multiplier — Volodymyr Khomichenko</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== MailerLite hookup =====================================================
+  // Leave empty for demo mode (shows a success message without sending).
+  // On the live site, set this to your serverless endpoint that forwards to
+  // MailerLite with your secret API key — e.g. "/api/subscribe" (see the
+  // mailerlite-subscribe.js function + setup notes shipped alongside this file).
+  const SUBSCRIBE_ENDPOINT = "";
+  // Link for the "About the book" banner + footer (set to the book's landing page).
+  const BOOK_URL = "https://khomichenko.com/marketing-as-a-revenue-multiplier/";
+  // ============================================================================
+
+  // --- embed auto-height (for WordPress / iframe embeds) ---
+  (function(){
+    if(window.parent === window) return; // not embedded
+    var last=0;
+    function post(){ var h=document.documentElement.scrollHeight; if(Math.abs(h-last)>4){ last=h; parent.postMessage({type:"rm-scorecard-height",height:h},"*"); } }
+    try{ new ResizeObserver(post).observe(document.body); }catch(e){}
+    window.addEventListener("load",post);
+    setInterval(post,700);
+  })();
+  (function(){ const a=document.getElementById("bookLink"); if(BOOK_URL) a.href=BOOK_URL; else a.addEventListener("click",e=>e.preventDefault()); })();
+
+  const BLOCKS = [
+    { key:"frame", name:"Frame", mean:"Do you own a category — or blend in with everyone else?",
+      play:"Name and own a category — write the one sentence you want said about you, then make everything say it.",
+      items:["People describe us in our own words.","We coined a name or term for what we do.","Our homepage doesn’t sound generic.","We’re seen as an original, not a copy.","People say we lead our category."] },
+    { key:"aim", name:"Aim", mean:"Do you aim at the exact person who creates demand — or at everyone?",
+      play:"Point the whole company at one specific person and a narrow beachhead you can dominate — not “everyone”.",
+      items:["We aim at a specific person, not “everyone”.","We win the actual user or champion, not just the budget-holder.","We dominate one narrow beachhead.","New users arrive because a peer sent them.","We can name our ideal customer by role and behavior."] },
+    { key:"wedge", name:"Wedge", mean:"Does your product spread on its own?",
+      play:"Find the moment using the product invites the next person in — make it one tap.",
+      items:["Using our product invites other people in.","People can try it without talking to sales.","Users bring in new users.","It spreads without us paying per user.","Sharing is built into the product."] },
+    { key:"reservoir", name:"Reservoir", mean:"Does your content keep working long after you post it?",
+      play:"Build content that appreciates — the definitive resource search and AI cite, not disposable posts.",
+      items:["Old content still brings us leads.","We show up in Google searches.","AI tools mention or cite us.","We have a go-to resource people return to.","Search and AI keep sending us new people."] },
+    { key:"network", name:"Network", mean:"Do fans and customers bring you more customers?",
+      play:"Turn customers into champions — make them the hero and give them wins to show their boss.",
+      items:["Customers refer us without being asked.","We have testimonials or case studies.","We’re reviewed on sites like G2 or Clutch.","Fans recommend us publicly.","Word of mouth brings real business."] },
+    { key:"expansion", name:"Expansion", mean:"Does one sale grow into more — deeper use, adjacent products, an ecosystem?",
+      play:"Grow the customer you already won — deeper adoption, adjacent products, and a marketplace others build on.",
+      items:["Existing customers spend more with us over time.","We sell adjacent products to our base.","We’d grow even if we won no new customers (NRR > 100%).","Adoption spreads deeper inside accounts (land-and-expand).","Partners or an ecosystem build on top of us."] },
+  ];
+
+  const REDFLAGS = [
+    { t:"We chase cheaper leads instead of creating demand.", fix:"Stop optimizing the trap — move budget from capturing intent to creating it." },
+    { t:"We drop our positioning after a quarter.", fix:"Message stamina: repeat your position long after you’re bored of it." },
+    { t:"We hide every useful thing behind a lead form.", fix:"Ungate your best content so it compounds instead of trading once for an email." },
+    { t:"We game SEO or AI with manipulative tricks.", fix:"Earn ranking honestly — platforms and AI claw back what you didn’t earn." },
+    { t:"We squeeze our community for short-term sales.", fix:"Serve the community first; extraction makes members feel used and leave." },
+    { t:"We buy reviews or fake advocacy.", fix:"Advocacy must be earned — bought enthusiasm reads as fake and corrodes trust." },
+    { t:"We lock customers in with contracts, not value.", fix:"Hold customers with accumulated value, not coercive friction." },
+    { t:"We spend trust for a short-term revenue bump.", grave:true, fix:"The worst trade in business — protect trust fanatically; it’s spent once." },
+  ];
+
+  const STRONG=[
+    "People know you in your own words — you own the category.",
+    "You aim at the exact person who creates demand — and own a beachhead.",
+    "Your product spreads itself — growth without paying per user.",
+    "Your content compounds — old work still earns and gets cited.",
+    "Advocates carry you — distribution you don’t pay for.",
+    "One sale becomes a stream — your base grows on its own."
+  ];
+  const MID="There’s a real foundation here — go one level deeper until it starts to compound.";
+
+  const N=6, ITEMS=5, TOTAL=N*ITEMS, RF=REDFLAGS.length;
+  const RF_STEP=N, FINAL_STEP=N+1;
+  const KEYS=BLOCKS.map(b=>b.key);
+  const answers = BLOCKS.map(()=> new Array(ITEMS).fill(null));
+  const redAns = new Array(RF).fill(null);
+  let step=0;
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const render = BLOCKS.map(()=>0);
+  let renderScore=0, renderCoef=1.05;
+
+  function blockScore(i){ let y=0; for(let k=0;k<ITEMS;k++) if(answers[i][k]===true) y++; return y/ITEMS*100; }
+  function buildScore(){ let s=0; for(let i=0;i<N;i++) s+=blockScore(i); return s/N; }
+  function answeredCount(){ let c=0; for(let i=0;i<N;i++) for(let k=0;k<ITEMS;k++) if(answers[i][k]!==null) c++; return c; }
+  function flagCount(){ let c=0; for(let i=0;i<RF;i++) if(redAns[i]===true) c++; return c; }
+  function trustPenalty(){ let p=0; for(let i=0;i<RF;i++) if(redAns[i]===true) p+=REDFLAGS[i].grave?0.14:0.07; return p; }
+  function trustCoef(){ return Math.max(0.4, Math.min(1.05, 1.05 - trustPenalty())); }
+  function baseMult(s){ return 0.2 + 7.8*Math.pow(s/100,1.4); }
+  function finalMultFrom(s,coef){ return baseMult(s)*coef; }
+
+  // ---------- unique emblem shapes ----------
+  function f(n){ return n.toFixed(2); }
+  function shapePath(type,cx,cy,R){
+    const S=v=>f(cx+v), T=v=>f(cy+v);
+    switch(type){
+      case "frame": { const r=R*0.86; return 'M'+S(-r)+' '+T(-r)+' L'+S(r)+' '+T(-r)+' L'+S(r)+' '+T(r)+' L'+S(-r)+' '+T(r)+' Z'; }
+      case "aim": return 'M'+S(0)+' '+T(-R)+' A'+R+' '+R+' 0 1 1 '+S(-0.01)+' '+T(-R)+' Z';
+      case "wedge": { const r=R; return 'M'+S(0)+' '+T(-r)+' L'+S(r*0.92)+' '+T(r*0.82)+' L'+S(-r*0.92)+' '+T(r*0.82)+' Z'; }
+      case "reservoir": { const w=R*0.72,h=R*0.98; return 'M'+S(-w)+' '+T(-h)+' L'+S(w)+' '+T(-h)+' L'+S(w)+' '+T(h)+' Q'+S(w)+' '+T(h+6)+' '+S(w-6)+' '+T(h+6)+' L'+S(-w+6)+' '+T(h+6)+' Q'+S(-w)+' '+T(h+6)+' '+S(-w)+' '+T(h)+' Z'; }
+      case "network": { let p=""; for(let k=0;k<6;k++){ const a=(60*k-90)*Math.PI/180; p+=(k?'L':'M')+S(R*0.96*Math.cos(a))+' '+T(R*0.96*Math.sin(a))+' '; } return p+'Z'; }
+      case "expansion": { const r=R; return 'M'+S(0)+' '+T(-r)+' L'+S(r)+' '+T(0)+' L'+S(0)+' '+T(r)+' L'+S(-r)+' '+T(0)+' Z'; }
+    }
+  }
+  function shapeDecor(type,cx,cy,R){
+    const S=v=>f(cx+v), T=v=>f(cy+v), c="#141922";
+    switch(type){
+      case "aim": return '<circle cx="'+S(0)+'" cy="'+T(0)+'" r="'+f(R*0.5)+'" fill="none" stroke="'+c+'" stroke-width="1.6"/>';
+      case "network": { let d=''; const pts=[]; for(let k=0;k<6;k++){ const a=(60*k-90)*Math.PI/180; pts.push([R*0.96*Math.cos(a),R*0.96*Math.sin(a)]); }
+        for(const p of pts) d+='<line x1="'+S(0)+'" y1="'+T(0)+'" x2="'+S(p[0])+'" y2="'+T(p[1])+'" stroke="'+c+'" stroke-width="1.1" opacity=".45"/>';
+        for(const p of pts) d+='<circle cx="'+S(p[0])+'" cy="'+T(p[1])+'" r="3" fill="#fff" stroke="'+c+'" stroke-width="1.5"/>'; return d; }
+      case "reservoir": return '<line x1="'+S(-R*0.72)+'" y1="'+T(-R*0.34)+'" x2="'+S(R*0.72)+'" y2="'+T(-R*0.34)+'" stroke="#fff" stroke-width="1" opacity=".45"/>';
+      case "expansion": { let d=''; const dirs=[[0,-1],[1,0],[0,1],[-1,0]]; for(const [dx,dy] of dirs){ d+='<line x1="'+S(dx*R*0.5)+'" y1="'+T(dy*R*0.5)+'" x2="'+S(dx*R*0.94)+'" y2="'+T(dy*R*0.94)+'" stroke="'+c+'" stroke-width="1.6" stroke-linecap="round"/>'; } return d; }
+    }
+    return "";
+  }
+
+  const shapesSvg=document.getElementById("shapes"), buildNum=document.getElementById("buildNum");
+  function drawShapes(){
+    const active = step<N ? step : -1, cols=3, cw=120, ch=150, R=42;
+    let defs='<defs>';
+    for(let i=0;i<N;i++){ const fr=Math.max(.0001,Math.min(.9999,render[i]/100));
+      defs+='<linearGradient id="sg'+i+'" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#4a86f5"/><stop offset="'+fr.toFixed(3)+'" stop-color="#2563eb"/><stop offset="'+fr.toFixed(3)+'" stop-color="#2563eb" stop-opacity="0"/><stop offset="1" stop-color="#2563eb" stop-opacity="0"/></linearGradient>'; }
+    defs+='</defs>'; let s=defs;
+    for(let i=0;i<N;i++){
+      const cx=(i%cols)*cw+cw/2, cy=Math.floor(i/cols)*ch+64, on=i===active, key=KEYS[i];
+      const cellX=(i%cols)*cw, cellY=Math.floor(i/cols)*ch;
+      const p=shapePath(key,cx,cy,R);
+      s+='<g class="shape" data-i="'+i+'" style="cursor:pointer">';
+      s+='<rect x="'+cellX+'" y="'+cellY+'" width="'+cw+'" height="'+ch+'" fill="transparent"/>';
+      s+='<path d="'+p+'" fill="#eef1f5"/>';
+      s+='<path d="'+p+'" fill="url(#sg'+i+')"/>';
+      s+='<path d="'+p+'" fill="none" stroke="'+(on?'#2563eb':'#c3cbd6')+'" stroke-width="'+(on?3.4:1.6)+'"/>';
+      s+=shapeDecor(key,cx,cy,R);
+      s+='<text class="shape-val" x="'+f(cx)+'" y="'+f(cy+(key==="wedge"?26:6))+'" text-anchor="middle">'+Math.round(render[i])+'</text>';
+      s+='<text class="shape-name" x="'+f(cx)+'" y="'+f(cy+60)+'" text-anchor="middle" fill="'+(on?'#2563eb':'#141922')+'">'+BLOCKS[i].name+'</text>';
+      s+='</g>';
+    }
+    shapesSvg.innerHTML=s;
+    buildNum.innerHTML=Math.round(renderScore)+'<small> / 100</small>';
+  }
+  shapesSvg.addEventListener("click",e=>{ const g=e.target.closest(".shape"); if(!g) return; step=+g.dataset.i; renderPanel(); });
+
+  const outBar=document.getElementById("outBar"), outAmt=document.getElementById("outAmt"),
+        multNum=document.getElementById("multNum"), multState=document.getElementById("multState"),
+        multSub=document.getElementById("multSub"), multNote=document.getElementById("multNote");
+  function drawMult(){
+    const base=baseMult(renderScore), coef=renderCoef, m=base*coef, flags=flagCount();
+    multNum.textContent=m.toFixed(1);
+    outBar.style.width=Math.max(6,Math.min(290,38*m))+"px";
+    outAmt.textContent="$"+m.toFixed(2);
+    multSub.innerHTML = "build ×"+base.toFixed(1)+" · " + (flags>0
+      ? 'trust <span class="bad">×'+coef.toFixed(2)+"</span> ("+flags+" red flag"+(flags>1?"s":"")+")"
+      : "trust ✓ clean");
+    if(m<1){ multState.textContent="Cost — losing"; multState.style.color="#8a94a3"; outBar.style.background="#c3cbd6";
+      multNote.innerHTML="Every $1 of marketing returns <b>$"+m.toFixed(2)+"</b> — you’re spending to stand still."; }
+    else { multState.style.color="#2563eb"; outBar.style.background="#2563eb";
+      multState.textContent = m<2?"Break-even+":(m<3.5?"Growing":(m<6?"Compounding":"Runaway multiplier"));
+      const drag = flags>0 ? " Clear the red flags and it climbs further." : " Keep building to compound it.";
+      multNote.innerHTML="Every $1 of marketing returns <b>$"+m.toFixed(2)+"</b>."+drag; }
+  }
+
+  function updateProgress(){
+    document.getElementById("progBar").style.width=(answeredCount()/TOTAL*100)+"%";
+    document.getElementById("progText").innerHTML='<b>'+answeredCount()+'</b>/'+TOTAL+' answered';
+  }
+
+  let raf=null;
+  function tick(){
+    let moving=false; const e=0.22;
+    for(let i=0;i<N;i++){ const tv=blockScore(i), d=tv-render[i]; if(Math.abs(d)>0.2){ render[i]+=d*e; moving=true; } else render[i]=tv; }
+    const ts=buildScore(), ds=ts-renderScore; if(Math.abs(ds)>0.2){ renderScore+=ds*e; moving=true; } else renderScore=ts;
+    const tc=trustCoef(), dc=tc-renderCoef; if(Math.abs(dc)>0.002){ renderCoef+=dc*e; moving=true; } else renderCoef=tc;
+    drawShapes(); drawMult(); raf = moving ? requestAnimationFrame(tick) : null;
+  }
+  function animate(){ if(reduce){ for(let i=0;i<N;i++) render[i]=blockScore(i); renderScore=buildScore(); renderCoef=trustCoef(); drawShapes(); drawMult(); } else if(raf===null) raf=requestAnimationFrame(tick); }
+
+  const panel=document.getElementById("panel");
+  const tabsEl=document.getElementById("tabs");
+  const TAB_LABELS=[...BLOCKS.map(b=>b.name), "⚑ Red flags", "★ Result"];
+  function renderTabs(){
+    let h="";
+    for(let s=0;s<=FINAL_STEP;s++){
+      let done=false;
+      if(s<N) done=answers[s].every(a=>a!==null);
+      else if(s===RF_STEP) done=redAns.every(a=>a!==null);
+      const isRes=s===FINAL_STEP;
+      h+='<button class="tab'+(s===step?' active':'')+(isRes?' result':'')+'" data-s="'+s+'">'+
+         ((done&&!isRes)?'<span class="dot"></span>':'')+TAB_LABELS[s]+'</button>';
+    }
+    tabsEl.innerHTML=h;
+    const act=tabsEl.querySelector(".tab.active");
+    if(act){ const L=act.offsetLeft, R=L+act.offsetWidth, vL=tabsEl.scrollLeft, vR=vL+tabsEl.clientWidth;
+      if(L<vL) tabsEl.scrollLeft=L-8; else if(R>vR) tabsEl.scrollLeft=R-tabsEl.clientWidth+8; }
+  }
+  tabsEl.addEventListener("click",e=>{ const t=e.target.closest(".tab"); if(!t) return; step=+t.dataset.s; renderPanel(); });
+
+  function renderPanel(){ updateProgress(); drawShapes(); renderTabs(); if(step<N) renderBlock(step); else if(step===RF_STEP) renderRedFlags(); else renderFinal(); }
+
+  function bindNav(){
+    const nb=document.getElementById("nextBtn"), bb=document.getElementById("backBtn");
+    if(nb) nb.addEventListener("click",()=>{ step=Math.min(step+1,FINAL_STEP); renderPanel(); });
+    if(bb && !bb.disabled) bb.addEventListener("click",()=>{ step=Math.max(step-1,0); renderPanel(); });
+  }
+
+  function renderBlock(i){
+    const b=BLOCKS[i];
+    let ans=0; for(let k=0;k<ITEMS;k++) if(answers[i][k]!==null) ans++;
+    let rows="";
+    for(let k=0;k<ITEMS;k++){ const a=answers[i][k];
+      rows+='<div class="q"><span class="q-text">'+b.items[k]+'</span>'+
+        '<span class="toggle" data-i="'+i+'" data-k="'+k+'">'+
+        '<button class="yes'+(a===true?' on':'')+'" data-v="1"><span class="ic">✓</span>Yes</button>'+
+        '<button class="no'+(a===false?' on':'')+'" data-v="0"><span class="ic">✕</span>No</button></span></div>'; }
+    panel.innerHTML='<div class="card">'+
+      '<div class="step-eyebrow"><span class="st">Round <b>'+(i+1)+'</b> of '+N+'</span><span class="pill-count">'+ans+'/'+ITEMS+' answered</span></div>'+
+      '<div class="block-name">'+b.name+'<span class="num">'+Math.round(blockScore(i))+'</span></div>'+
+      '<div class="block-mean">'+b.mean+'</div>'+
+      '<div class="quick"><span>Quick fill:</span><button class="qbtn" data-all="1">All yes</button><button class="qbtn" data-all="0">All no</button></div>'+
+      rows+
+      '<div class="nav"><button class="btn ghost" id="backBtn"'+(i===0?' disabled':'')+'>← Back</button>'+
+      '<button class="btn" id="nextBtn">Next →</button></div></div>';
+
+    panel.querySelector(".quick").addEventListener("click",e=>{
+      const q=e.target.closest(".qbtn"); if(!q) return; const val=q.dataset.all==="1";
+      for(let k=0;k<ITEMS;k++) answers[i][k]=val; renderPanel(); animate();
+    });
+    panel.querySelectorAll(".toggle").forEach(tg=>{
+      tg.addEventListener("click",e=>{
+        const btn=e.target.closest("button[data-v]"); if(!btn) return;
+        const bi=+tg.dataset.i, bk=+tg.dataset.k, v=btn.dataset.v==="1";
+        answers[bi][bk]=(answers[bi][bk]===v)?null:v;
+        tg.querySelector(".yes").classList.toggle("on",answers[bi][bk]===true);
+        tg.querySelector(".no").classList.toggle("on",answers[bi][bk]===false);
+        panel.querySelector(".block-name .num").textContent=Math.round(blockScore(bi));
+        let c=0; for(let k=0;k<ITEMS;k++) if(answers[bi][k]!==null) c++;
+        panel.querySelector(".pill-count").textContent=c+'/'+ITEMS+' answered';
+        updateProgress(); animate();
+      });
+    });
+    bindNav();
+  }
+
+  function renderRedFlags(){
+    let ans=0; for(let i=0;i<RF;i++) if(redAns[i]!==null) ans++;
+    let rows="";
+    for(let i=0;i<RF;i++){ const a=redAns[i];
+      rows+='<div class="q"><span class="q-text">'+REDFLAGS[i].t+'</span>'+
+        '<span class="toggle rf" data-i="'+i+'">'+
+        '<button class="yes'+(a===true?' on':'')+'" data-v="1"><span class="ic">⚑</span>Yes</button>'+
+        '<button class="no'+(a===false?' on':'')+'" data-v="0">No</button></span></div>'; }
+    panel.innerHTML='<div class="card">'+
+      '<div class="step-eyebrow"><span class="st">Final round · <b>red flags</b></span><span class="pill-count">'+ans+'/'+RF+' answered</span></div>'+
+      '<div class="block-name">What’s dragging you down?<span class="num rf">×'+trustCoef().toFixed(2)+'</span></div>'+
+      '<div class="block-mean">Straight from the book’s anti-patterns. A <b>Yes</b> here spends trust — and trust multiplies everything you built.</div>'+
+      '<div class="quick"><span>Quick fill:</span><button class="qbtn" data-all="1">All yes</button><button class="qbtn" data-all="0">All no</button></div>'+
+      rows+
+      '<div class="nav"><button class="btn ghost" id="backBtn">← Back</button>'+
+      '<button class="btn primary" id="nextBtn">See my scorecard →</button></div></div>';
+
+    panel.querySelector(".quick").addEventListener("click",e=>{
+      const q=e.target.closest(".qbtn"); if(!q) return; const val=q.dataset.all==="1";
+      for(let k=0;k<RF;k++) redAns[k]=val; renderPanel(); animate();
+    });
+    panel.querySelectorAll(".toggle").forEach(tg=>{
+      tg.addEventListener("click",e=>{
+        const btn=e.target.closest("button[data-v]"); if(!btn) return;
+        const i=+tg.dataset.i, v=btn.dataset.v==="1";
+        redAns[i]=(redAns[i]===v)?null:v;
+        tg.querySelector(".yes").classList.toggle("on",redAns[i]===true);
+        tg.querySelector(".no").classList.toggle("on",redAns[i]===false);
+        let c=0; for(let k=0;k<RF;k++) if(redAns[k]!==null) c++;
+        panel.querySelector(".pill-count").textContent=c+'/'+RF+' answered';
+        panel.querySelector(".block-name .num").textContent='×'+trustCoef().toFixed(2);
+        animate();
+      });
+    });
+    bindNav();
+  }
+
+  function strongestWeakest(){
+    const arr=BLOCKS.map((b,i)=>({i,name:b.name,v:blockScore(i)}));
+    const asc=[...arr].sort((a,b)=>a.v-b.v);
+    return { weak:asc.slice(0,2), strong:[...arr].sort((a,b)=>b.v-a.v)[0], min:asc[0].v, max:asc[asc.length-1].v };
+  }
+  function archetype(){
+    const b=buildScore(), sw=strongestWeakest(), spread=sw.max-sw.min;
+    const story=(blockScore(0)+blockScore(1))/2;                 // Frame + Aim (upstream)
+    const dist=(blockScore(2)+blockScore(4)+blockScore(5))/3;    // Wedge + Network + Expansion (spread)
+    if(b>70 && spread<25) return {name:"Compounding Machine", line:"Rare air — every component is pulling its weight."};
+    if(story>=60 && dist<=40) return {name:"Great Story, No Distribution", line:"You’ve defined the market but aren’t spreading through it — a story on rented channels is still a consumable."};
+    if(dist>=60 && story<=40) return {name:"Spreads, but Undefined", line:"You spread fast but own no category — growth without a moat, and fragile until you do the upstream work."};
+    if(spread>=40 && sw.max>=65 && b>=40) return {name:sw.strong.name+"-led Engine", line:"One pillar is carrying you. Powerful — and fragile if it stalls."};
+    if(b<35) return {name:"Cost Center", line:"Marketing is spend here, not an asset — but every axis is a lever you can pull."};
+    return {name:"Emerging Multiplier", line:"Foundations are forming — pick one axis and go deep."};
+  }
+  function maturity(){
+    const b=buildScore();
+    if(b<20) return "L1 · Communication";
+    if(b<40) return "L2 · Lead Generation";
+    if(b<60) return "L3 · Demand Creation";
+    if(b<80) return "L4 · Revenue Engine";
+    return "L5 · Revenue Multiplier";
+  }
+  function compReport(i){
+    const v=blockScore(i);
+    if(v>=70) return {tag:"Strong", cls:"good", text:STRONG[i], v:v};
+    if(v>=40) return {tag:"Forming", cls:"mid", text:MID, v:v};
+    return {tag:"Weak", cls:"warn", text:BLOCKS[i].play, v:v};
+  }
+  function renderFinal(){
+    const b=Math.round(buildScore()), coef=trustCoef(), base=baseMult(buildScore()), m=finalMultFrom(buildScore(),coef),
+          a=archetype(), matur=maturity(), sw=strongestWeakest(), flags=flagCount();
+    // ----- short headline action -----
+    let graveIdx=-1; for(let i=0;i<RF;i++) if(redAns[i]===true){ if(REDFLAGS[i].grave){ graveIdx=i; break; } if(graveIdx<0) graveIdx=i; }
+    let topAction;
+    if(graveIdx>=0) topAction='<div class="rec"><span class="rec-badge stop">STOP</span><span><span class="rec-name">'+REDFLAGS[graveIdx].t+'</span> <span class="rec-play">'+REDFLAGS[graveIdx].fix+'</span></span></div>';
+    else { const w=sw.weak[0], bl=BLOCKS[w.i]; topAction='<div class="rec"><span class="rec-badge">'+Math.round(w.v)+'</span><span><span class="rec-name">'+bl.name+'.</span> <span class="rec-play">'+bl.play+'</span></span></div>'; }
+    const trustLine = flags>0 ? ' <b>'+flags+' red flag'+(flags>1?'s are':' is')+'</b> taxing it (trust ×'+coef.toFixed(2)+').' : ' Trust is clean — nothing is dragging you down.';
+
+    // ----- full report (hidden until expanded) -----
+    let comps="";
+    for(let i=0;i<N;i++){ const r=compReport(i); const barCol=r.cls==="warn"?"#3a4150":(r.cls==="mid"?"#c3cbd6":"#2563eb");
+      comps+='<div class="crow"><div class="crow-top"><span class="crow-nm">'+BLOCKS[i].name+'</span>'+
+        '<span class="ctag '+r.cls+'">'+r.tag+'</span><span class="cscore">'+Math.round(r.v)+'</span></div>'+
+        '<div class="cbar"><span style="width:'+Math.round(r.v)+'%;background:'+barCol+'"></span></div>'+
+        '<div class="ctext">'+r.text+'</div></div>'; }
+    let fixes="";
+    for(let i=0;i<RF;i++) if(redAns[i]===true) fixes+='<div class="fix"><span class="fix-ic">⚑</span><span><b>'+REDFLAGS[i].t+'</b> <span class="f2">'+REDFLAGS[i].fix+'</span></span></div>';
+    if(!fixes) fixes='<div class="ctext">No red flags — you’re protecting trust. That’s the rarest and most valuable thing here.</div>';
+    const mmInterp = m<1 ? "Right now you’re spending to stand still — the fixes above are how you cross ×1." : "Every $1 of marketing is returning $"+m.toFixed(2)+". Clear the red flags and deepen the weak shapes to push it higher.";
+    const mm='Your build score of <b>'+b+'</b> maps to a <b>×'+base.toFixed(1)+'</b> base. '+(flags>0?'Trust taxes it by <b>×'+coef.toFixed(2)+'</b> ('+flags+' red flag'+(flags>1?'s':'')+'), landing at ':'Trust is clean, landing at ')+'<b>×'+m.toFixed(1)+'</b>. '+mmInterp+' These six aren’t a checklist — they’re a system, and the mix shifts with who you serve.';
+
+    panel.innerHTML='<div class="card">'+
+      '<div class="step-eyebrow"><span class="st">Your result</span><span class="pill-count">build '+b+' · ×'+m.toFixed(1)+'</span></div>'+
+      '<div class="final-arche" style="margin-top:14px">Archetype · <span style="color:var(--muted)">'+matur+'</span></div><div class="final-title">'+a.name+'</div>'+
+      '<div class="final-line">'+a.line+' Your marketing is roughly a <b>×'+m.toFixed(1)+' revenue multiplier</b>.'+trustLine+'</div>'+
+      '<div class="disclaimer">A quick, directional read of where your marketing compounds — not a full audit.</div>'+
+      '<div class="recs"><h3>'+(graveIdx>=0?'Fix this first':'Build this next')+'</h3>'+topAction+'</div>'+
+      '<button class="more-btn" id="moreBtn">Read the full analysis ↓</button>'+
+      '<div class="full" id="full"><div class="full-inner">'+
+        '<div class="rep-h3">Your six components</div>'+comps+
+        '<div class="rep-h3">Red flags to clear</div>'+fixes+
+        '<div class="rep-h3">What your multiplier means</div><div class="mm">'+mm+'</div>'+
+        '<div class="email-cta" id="emailCta">'+
+          '<div class="ec-title">Want this analysis in your inbox?</div>'+
+          '<div class="ec-sub">We’ll email your full scorecard and the exact chapters to read next.</div>'+
+          '<div class="ec-row"><input type="email" id="emailInput" placeholder="you@company.com" autocomplete="email" />'+
+          '<button class="btn primary" id="emailSend" disabled>Send it to me</button></div>'+
+          '<label class="ec-consent"><input type="checkbox" id="emailConsent" /><span>I agree to receive this analysis and occasional updates about <em>Marketing as a Revenue Multiplier</em>. Unsubscribe anytime.</span></label>'+
+        '</div>'+
+      '</div></div>'+
+      '<div class="final-cta"><button class="btn ghost" id="restart">← Edit answers</button></div>'+
+    '</div>';
+
+    document.getElementById("restart").addEventListener("click",()=>{ step=0; renderPanel(); });
+    const full=document.getElementById("full"), moreBtn=document.getElementById("moreBtn");
+    moreBtn.addEventListener("click",()=>{ const open=full.classList.toggle("open"); moreBtn.textContent=open?"Hide the full analysis ↑":"Read the full analysis ↓"; });
+
+    const email=document.getElementById("emailInput"), consent=document.getElementById("emailConsent"), send=document.getElementById("emailSend");
+    const valid=()=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()) && consent.checked;
+    const sync=()=>{ send.disabled=!valid(); };
+    email.addEventListener("input",sync); consent.addEventListener("change",sync);
+    const okMsg=addr=>'<div class="ec-done">✓ Done — your analysis is on its way to <b>'+addr+'</b>. Check your inbox (and spam, just in case).</div>';
+    send.addEventListener("click",async ()=>{ if(!valid()) return;
+      const addr=email.value.trim(), cta=document.getElementById("emailCta");
+      const payload={ email:addr, consent:true, build:b, multiplier:+m.toFixed(1), archetype:a.name, level:matur, weak:sw.weak.map(o=>BLOCKS[o.i].name), flags:flagCount() };
+      if(!SUBSCRIBE_ENDPOINT){ cta.innerHTML=okMsg(addr)+'<div class="ec-sub" style="margin-top:6px">(Demo mode — connect MailerLite to send for real.)</div>'; return; }
+      send.disabled=true; send.textContent="Sending…";
+      try{
+        const r=await fetch(SUBSCRIBE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        if(!r.ok) throw new Error("bad status");
+        cta.innerHTML=okMsg(addr);
+      }catch(err){ send.disabled=false; send.textContent="Send it to me";
+        if(!cta.querySelector(".ec-err")) cta.insertAdjacentHTML("beforeend",'<div class="ec-sub ec-err" style="color:var(--warn);font-weight:600;margin-top:8px">That didn’t go through — please try again in a moment.</div>'); }
+    });
+  }
+
+  renderPanel();
+  animate();
+})();
+</script>
+</body>
+</html>
