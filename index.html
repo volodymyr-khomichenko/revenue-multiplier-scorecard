@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Revenue Multiplier Scorecard — How much of a revenue multiplier is your marketing?</title>
-<meta name="description" content="A free 2-minute scorecard based on the book “Marketing as a Revenue Multiplier” by Volodymyr Khomichenko. Answer quick yes/no rounds and see your revenue multiplier, archetype, and what to build next." />
-<meta property="og:title" content="Revenue Multiplier Scorecard" />
-<meta property="og:description" content="How much of a revenue multiplier is your marketing? A free 2-minute check based on the book by Volodymyr Khomichenko." />
+<title>Revenue Multiplier Framework — How much of a revenue multiplier is your marketing?</title>
+<meta name="description" content="The framework from the book “Marketing as a Revenue Multiplier” by Volodymyr Khomichenko. Answer quick yes/no rounds and see your revenue multiplier, archetype, and what to build next." />
+<meta property="og:title" content="Revenue Multiplier Framework" />
+<meta property="og:description" content="How much of a revenue multiplier is your marketing? The framework from the book by Volodymyr Khomichenko." />
 <meta property="og:type" content="website" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <style>
@@ -202,9 +202,9 @@
 <body>
 <div class="wrap">
 
-  <div class="book-banner"><span class="bx">×</span><span>This scorecard is built on the framework from the book <b>“Marketing as a Revenue Multiplier”</b> by Volodymyr Khomichenko. To understand the full logic behind your result, I recommend reading the book. <a href="#" id="bookLink">About the book →</a></span></div>
+  <div class="book-banner"><span class="bx">×</span><span>This is the framework from the book <b>“Marketing as a Revenue Multiplier”</b> by Volodymyr Khomichenko. To understand the full logic behind your result, I recommend reading the book. <a href="#" id="bookLink">About the book →</a></span></div>
 
-  <div class="eyebrow"><span class="x">×</span> The Scorecard</div>
+  <div class="eyebrow"><span class="x">×</span> The Framework</div>
   <h1 class="headline">How much of a revenue <em>multiplier</em> is your marketing?</h1>
   <p class="subhead">Six quick rounds of <b>Yes/No</b>, then the <b>red flags</b> that quietly drag you down. Watch your multiplier swing from a cost to a compounding machine.</p>
 
@@ -238,7 +238,7 @@
   </div>
 
   <div class="foot">
-    <span>Revenue Multiplier Scorecard · <span class="tag">v0.14</span></span>
+    <span>Revenue Multiplier Framework · <span class="tag">v0.15</span></span>
     <span>Marketing as a Revenue Multiplier — Volodymyr Khomichenko</span>
   </div>
 
@@ -262,7 +262,7 @@
   (function(){
     if(window.parent === window) return; // not embedded
     var last=0;
-    function post(){ var h=document.documentElement.scrollHeight; if(Math.abs(h-last)>4){ last=h; parent.postMessage({type:"rm-scorecard-height",height:h},"*"); } }
+    function post(){ var h=document.documentElement.scrollHeight; if(Math.abs(h-last)>4){ last=h; parent.postMessage({type:"rm-framework-height",height:h},"*"); } }
     try{ new ResizeObserver(post).observe(document.body); }catch(e){}
     window.addEventListener("load",post);
     setInterval(post,700);
@@ -497,7 +497,7 @@
       '<div class="quick"><span>Quick fill:</span><button class="qbtn" data-all="1">All yes</button><button class="qbtn" data-all="0">All no</button></div>'+
       rows+
       '<div class="nav"><button class="btn ghost" id="backBtn">← Back</button>'+
-      '<button class="btn primary" id="nextBtn">See my scorecard →</button></div></div>';
+      '<button class="btn primary" id="nextBtn">See my framework →</button></div></div>';
 
     panel.querySelector(".quick").addEventListener("click",e=>{
       const q=e.target.closest(".qbtn"); if(!q) return; const val=q.dataset.all==="1";
@@ -585,7 +585,7 @@
         '<div class="rep-h3">What your multiplier means</div><div class="mm">'+mm+'</div>'+
         '<div class="email-cta" id="emailCta">'+
           '<div class="ec-title">Want this analysis in your inbox?</div>'+
-          '<div class="ec-sub">We’ll email your full scorecard and the exact chapters to read next.</div>'+
+          '<div class="ec-sub">We’ll email your framework and the exact chapters to read next.</div>'+
           '<div class="ec-row"><input type="email" id="emailInput" placeholder="you@company.com" autocomplete="email" />'+
           '<button class="btn primary" id="emailSend" disabled>Send it to me</button></div>'+
           '<label class="ec-consent"><input type="checkbox" id="emailConsent" /><span>I agree to receive this analysis and occasional updates about <em>Marketing as a Revenue Multiplier</em>. Unsubscribe anytime.</span></label>'+

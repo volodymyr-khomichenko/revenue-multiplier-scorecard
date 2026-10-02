@@ -1,6 +1,6 @@
-// api/subscribe.js — Vercel serverless function for the Revenue Multiplier Scorecard
+// api/subscribe.js — Vercel serverless function for the Revenue Multiplier Framework
 // -----------------------------------------------------------------------------
-// Forwards the scorecard email + result to MailerLite. The secret API key lives
+// Forwards the framework email + result to MailerLite. The secret API key lives
 // ONLY here (as an environment variable), never in the public widget.
 //
 // Deploy: this file lives at /api/subscribe.js in the Vercel project; the widget's

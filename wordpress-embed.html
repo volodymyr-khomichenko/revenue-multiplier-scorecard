@@ -1,20 +1,20 @@
 <!-- ============================================================
-  Revenue Multiplier Scorecard — WordPress embed snippet
-  1. The live page is https://revenue-multiplier-scorecard.khomichenko.com
+  Revenue Multiplier Framework — WordPress embed snippet
+  1. The live page is https://revenue-multiplier-framework.khomichenko.com
      (until DNS is ready, the Vercel URL also works).
   2. In WordPress: edit the page → add a "Custom HTML" block →
      paste this whole snippet → Update.
 ============================================================= -->
-<iframe id="rm-scorecard"
-        src="https://revenue-multiplier-scorecard.khomichenko.com"
+<iframe id="rm-framework"
+        src="https://revenue-multiplier-framework.khomichenko.com"
         style="width:100%;border:0;display:block;min-height:900px"
         scrolling="no"
         loading="lazy"
-        title="Revenue Multiplier Scorecard"></iframe>
+        title="Revenue Multiplier Framework"></iframe>
 <script>
 window.addEventListener("message", function (e) {
-  if (e.data && e.data.type === "rm-scorecard-height") {
-    var f = document.getElementById("rm-scorecard");
+  if (e.data && e.data.type === "rm-framework-height") {
+    var f = document.getElementById("rm-framework");
     if (f) f.style.height = e.data.height + "px";
   }
 });
