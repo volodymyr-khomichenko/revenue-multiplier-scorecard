@@ -2,7 +2,8 @@
 
 Self-contained scorecard for the book [Marketing as a Revenue Multiplier](https://khomichenko.com/marketing-as-a-revenue-multiplier/).
 
-Live (once DNS is pointed): https://scorecard.khomichenko.com
+Live: https://revenue-multiplier-scorecard.vercel.app
+Custom domain (once DNS is pointed): https://revenue-multiplier-scorecard.khomichenko.com
 
 ## Files
 
