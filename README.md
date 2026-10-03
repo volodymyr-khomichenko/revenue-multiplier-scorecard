@@ -7,7 +7,9 @@ Custom domain (once DNS is pointed): https://revenue-multiplier-framework.khomic
 
 ## Files
 
-- `index.html` — the whole product (v0.15)
+- `index.html` — the whole product (v0.16)
+- `og.png` — link preview, 1200×630
+- `x-banner.png` — X header, 1500×500
 - `api/subscribe.js` — sends the email copy to MailerLite
 - `wordpress-embed.html` — paste into a WordPress Custom HTML block later, if you decide to embed
 
