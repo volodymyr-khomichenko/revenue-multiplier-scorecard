@@ -8,7 +8,7 @@
 <meta property="og:title" content="Revenue Multiplier Framework" />
 <meta property="og:description" content="How much of a revenue multiplier is your marketing? The framework from the book by Volodymyr Khomichenko." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://revenue-multiplier-framework.vercel.app/" />
+<meta property="og:url" content="https://revenue-multiplier-framework.khomichenko.com/" />
 <meta property="og:image" content="https://revenue-multiplier-framework.vercel.app/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -17,6 +17,9 @@
 <meta name="twitter:title" content="Revenue Multiplier Framework" />
 <meta name="twitter:description" content="How much of a revenue multiplier is your marketing?" />
 <meta name="twitter:image" content="https://revenue-multiplier-framework.vercel.app/og.png" />
+<meta name="theme-color" content="#eef1f5" />
+<link rel="canonical" href="https://revenue-multiplier-framework.khomichenko.com/" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23eef1f5'/><path d='M8 8l16 16M24 8L8 24' stroke='%232563eb' stroke-width='3.2' stroke-linecap='round'/></svg>" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <style>
   :root{
@@ -138,6 +141,7 @@
   .rec-name{ font-family:var(--serif); font-weight:600; font-size:16px; }
   .rec-play{ color:var(--muted); font-size:14.5px; line-height:1.4; }
   .final-cta{ display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+  .final-cta a.btn{ text-decoration:none; display:inline-block; }
 
   /* expandable full report */
   .more-btn{ width:100%; margin-top:18px; font-weight:600; font-size:13px; padding:12px; border-radius:14px; cursor:pointer; border:1.5px dashed var(--line); background:var(--paper); color:var(--ink); transition:all .14s ease; }
@@ -180,6 +184,9 @@
   .foot{ margin-top:28px; font-size:11.5px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; border-top:1px solid var(--line); padding-top:16px; }
   .foot .tag{ color:var(--blue); font-weight:600; }
 
+  @media (min-width:841px){
+    .tabs{ flex-wrap:wrap; overflow:visible; }
+  }
   @media (max-width:840px){
     .stage{ grid-template-columns:1fr; }
     .left{ position:static; }
@@ -228,9 +235,9 @@
       </div>
 
       <div class="mult-card">
-        <div class="mult-head"><span class="mult-cap">Your revenue multiplier</span><span class="mult-state" id="multState">Cost — losing</span></div>
-        <div class="mult-big"><span class="x">×</span><span id="multNum">0.2</span></div>
-        <div class="mult-sub" id="multSub">build ×0.2 · trust ✓ clean</div>
+        <div class="mult-head"><span class="mult-cap">Your revenue multiplier</span><span class="mult-state" id="multState">Not started</span></div>
+        <div class="mult-big"><span class="x">×</span><span id="multNum">—</span></div>
+        <div class="mult-sub" id="multSub">trust · not answered</div>
         <div class="io">
           <div class="io-row"><span class="io-lbl">$1 spend</span><div class="io-bar in" style="width:38px"></div></div>
           <div class="io-row"><span class="io-lbl">return</span><div class="io-bar out" id="outBar" style="width:8px"></div><span class="io-amt" id="outAmt">$0.20</span></div>
@@ -247,7 +254,7 @@
   </div>
 
   <div class="foot">
-    <span>Revenue Multiplier Framework · <span class="tag">v0.16</span></span>
+    <span>Revenue Multiplier Framework · <span class="tag">v0.17</span></span>
     <span>Marketing as a Revenue Multiplier — Volodymyr Khomichenko</span>
   </div>
 
@@ -258,7 +265,7 @@
   "use strict";
 
   // ===== MailerLite hookup =====================================================
-  // Leave empty for demo mode (shows a success message without sending).
+  // Leave empty to hide the inbox form. Set to "/api/subscribe" once MailerLite is connected.
   // On the live site, set this to your serverless endpoint that forwards to
   // MailerLite with your secret API key — e.g. "/api/subscribe" (see the
   // mailerlite-subscribe.js function + setup notes shipped alongside this file).
@@ -338,6 +345,10 @@
   function trustCoef(){ return Math.max(0.4, Math.min(1.05, 1.05 - trustPenalty())); }
   function baseMult(s){ return 0.2 + 7.8*Math.pow(s/100,1.4); }
   function finalMultFrom(s,coef){ return baseMult(s)*coef; }
+  function mult1(m){ return (Math.floor(m*10)/10).toFixed(1); }
+  function flagsAnswered(){ let c=0; for(let i=0;i<RF;i++) if(redAns[i]!==null) c++; return c; }
+  function flagsUnansweredNoneYes(){ let open=false; for(let i=0;i<RF;i++){ if(redAns[i]===true) return false; if(redAns[i]===null) open=true; } return open; }
+  function escAttr(s){ return String(s).replace(/&/g,"\u0026amp;").replace(/"/g,"\u0026quot;"); }
 
   // ---------- unique emblem shapes ----------
   function f(n){ return n.toFixed(2); }
@@ -389,19 +400,32 @@
     shapesSvg.innerHTML=s;
     buildNum.innerHTML=Math.round(renderScore)+'<small> / 100</small>';
   }
-  shapesSvg.addEventListener("click",e=>{ const g=e.target.closest(".shape"); if(!g) return; step=+g.dataset.i; renderPanel(); });
+  shapesSvg.addEventListener("click",e=>{ const g=e.target.closest(".shape"); if(!g) return; step=+g.dataset.i; pendingFocus=true; renderPanel(); });
 
   const outBar=document.getElementById("outBar"), outAmt=document.getElementById("outAmt"),
         multNum=document.getElementById("multNum"), multState=document.getElementById("multState"),
         multSub=document.getElementById("multSub"), multNote=document.getElementById("multNote");
   function drawMult(){
+    const answered=answeredCount();
+    if(answered===0){
+      multNum.textContent="—";
+      multState.textContent="Not started";
+      multState.style.color="";
+      outBar.style.width="8px";
+      outBar.style.background="#c3cbd6";
+      outAmt.textContent="$0.20";
+      multSub.textContent="trust · not answered";
+      multNote.textContent="Answer the rounds to build it up — a great marketing engine can return many times what you put in.";
+      return;
+    }
     const base=baseMult(renderScore), coef=renderCoef, m=base*coef, flags=flagCount();
-    multNum.textContent=m.toFixed(1);
+    multNum.textContent=mult1(m);
     outBar.style.width=Math.max(6,Math.min(290,38*m))+"px";
     outAmt.textContent="$"+m.toFixed(2);
-    multSub.innerHTML = "build ×"+base.toFixed(1)+" · " + (flags>0
+    const trustBit = flags>0
       ? 'trust <span class="bad">×'+coef.toFixed(2)+"</span> ("+flags+" red flag"+(flags>1?"s":"")+")"
-      : "trust ✓ clean");
+      : (flagsUnansweredNoneYes() ? "trust · not answered" : "trust ✓ clean");
+    multSub.innerHTML = "build ×"+mult1(base)+" · " + trustBit;
     if(m<1){ multState.textContent="Cost — losing"; multState.style.color="#8a94a3"; outBar.style.background="#c3cbd6";
       multNote.innerHTML="Every $1 of marketing returns <b>$"+m.toFixed(2)+"</b> — you’re spending to stand still."; }
     else { multState.style.color="#2563eb"; outBar.style.background="#2563eb";
@@ -443,14 +467,16 @@
     if(act){ const L=act.offsetLeft, R=L+act.offsetWidth, vL=tabsEl.scrollLeft, vR=vL+tabsEl.clientWidth;
       if(L<vL) tabsEl.scrollLeft=L-8; else if(R>vR) tabsEl.scrollLeft=R-tabsEl.clientWidth+8; }
   }
-  tabsEl.addEventListener("click",e=>{ const t=e.target.closest(".tab"); if(!t) return; step=+t.dataset.s; renderPanel(); });
+  tabsEl.addEventListener("click",e=>{ const t=e.target.closest(".tab"); if(!t) return; step=+t.dataset.s; pendingFocus=true; renderPanel(); });
 
-  function renderPanel(){ updateProgress(); drawShapes(); renderTabs(); if(step<N) renderBlock(step); else if(step===RF_STEP) renderRedFlags(); else renderFinal(); }
+  let pendingFocus=false;
+  function renderPanel(){ updateProgress(); drawShapes(); renderTabs(); if(step<N) renderBlock(step); else if(step===RF_STEP) renderRedFlags(); else renderFinal();
+    if(pendingFocus){ pendingFocus=false; const h=panel.querySelector("h2"); if(h){ h.tabIndex=-1; h.focus(); } } }
 
   function bindNav(){
     const nb=document.getElementById("nextBtn"), bb=document.getElementById("backBtn");
-    if(nb) nb.addEventListener("click",()=>{ step=Math.min(step+1,FINAL_STEP); renderPanel(); });
-    if(bb && !bb.disabled) bb.addEventListener("click",()=>{ step=Math.max(step-1,0); renderPanel(); });
+    if(nb) nb.addEventListener("click",()=>{ step=Math.min(step+1,FINAL_STEP); pendingFocus=true; renderPanel(); });
+    if(bb && !bb.disabled) bb.addEventListener("click",()=>{ step=Math.max(step-1,0); pendingFocus=true; renderPanel(); });
   }
 
   function renderBlock(i){
@@ -459,12 +485,12 @@
     let rows="";
     for(let k=0;k<ITEMS;k++){ const a=answers[i][k];
       rows+='<div class="q"><span class="q-text">'+b.items[k]+'</span>'+
-        '<span class="toggle" data-i="'+i+'" data-k="'+k+'">'+
-        '<button class="yes'+(a===true?' on':'')+'" data-v="1"><span class="ic">✓</span>Yes</button>'+
-        '<button class="no'+(a===false?' on':'')+'" data-v="0"><span class="ic">✕</span>No</button></span></div>'; }
+        '<span class="toggle" role="group" aria-label="'+escAttr(b.items[k])+'" data-i="'+i+'" data-k="'+k+'">'+
+        '<button class="yes'+(a===true?' on':'')+'" data-v="1" aria-pressed="'+(a===true?'true':'false')+'"><span class="ic">✓</span>Yes</button>'+
+        '<button class="no'+(a===false?' on':'')+'" data-v="0" aria-pressed="'+(a===false?'true':'false')+'"><span class="ic">✕</span>No</button></span></div>'; }
     panel.innerHTML='<div class="card">'+
       '<div class="step-eyebrow"><span class="st">Round <b>'+(i+1)+'</b> of '+N+'</span><span class="pill-count">'+ans+'/'+ITEMS+' answered</span></div>'+
-      '<div class="block-name">'+b.name+'<span class="num">'+Math.round(blockScore(i))+'</span></div>'+
+      '<h2 class="block-name" tabindex="-1">'+b.name+'<span class="num">'+Math.round(blockScore(i))+'</span></h2>'+
       '<div class="block-mean">'+b.mean+'</div>'+
       '<div class="quick"><span>Quick fill:</span><button class="qbtn" data-all="1">All yes</button><button class="qbtn" data-all="0">All no</button></div>'+
       rows+
@@ -482,6 +508,8 @@
         answers[bi][bk]=(answers[bi][bk]===v)?null:v;
         tg.querySelector(".yes").classList.toggle("on",answers[bi][bk]===true);
         tg.querySelector(".no").classList.toggle("on",answers[bi][bk]===false);
+        tg.querySelector(".yes").setAttribute("aria-pressed", answers[bi][bk]===true ? "true" : "false");
+        tg.querySelector(".no").setAttribute("aria-pressed", answers[bi][bk]===false ? "true" : "false");
         panel.querySelector(".block-name .num").textContent=Math.round(blockScore(bi));
         let c=0; for(let k=0;k<ITEMS;k++) if(answers[bi][k]!==null) c++;
         panel.querySelector(".pill-count").textContent=c+'/'+ITEMS+' answered';
@@ -496,12 +524,12 @@
     let rows="";
     for(let i=0;i<RF;i++){ const a=redAns[i];
       rows+='<div class="q"><span class="q-text">'+REDFLAGS[i].t+'</span>'+
-        '<span class="toggle rf" data-i="'+i+'">'+
-        '<button class="yes'+(a===true?' on':'')+'" data-v="1"><span class="ic">⚑</span>Yes</button>'+
-        '<button class="no'+(a===false?' on':'')+'" data-v="0">No</button></span></div>'; }
+        '<span class="toggle rf" role="group" aria-label="'+escAttr(REDFLAGS[i].t)+'" data-i="'+i+'">'+
+        '<button class="yes'+(a===true?' on':'')+'" data-v="1" aria-pressed="'+(a===true?'true':'false')+'"><span class="ic">⚑</span>Yes</button>'+
+        '<button class="no'+(a===false?' on':'')+'" data-v="0" aria-pressed="'+(a===false?'true':'false')+'">No</button></span></div>'; }
     panel.innerHTML='<div class="card">'+
       '<div class="step-eyebrow"><span class="st">Final round · <b>red flags</b></span><span class="pill-count">'+ans+'/'+RF+' answered</span></div>'+
-      '<div class="block-name">What’s dragging you down?<span class="num rf">×'+trustCoef().toFixed(2)+'</span></div>'+
+      '<h2 class="block-name" tabindex="-1">What’s dragging you down?<span class="num rf">×'+trustCoef().toFixed(2)+'</span></h2>'+
       '<div class="block-mean">Straight from the book’s anti-patterns. A <b>Yes</b> here spends trust — and trust multiplies everything you built.</div>'+
       '<div class="quick"><span>Quick fill:</span><button class="qbtn" data-all="1">All yes</button><button class="qbtn" data-all="0">All no</button></div>'+
       rows+
@@ -519,6 +547,8 @@
         redAns[i]=(redAns[i]===v)?null:v;
         tg.querySelector(".yes").classList.toggle("on",redAns[i]===true);
         tg.querySelector(".no").classList.toggle("on",redAns[i]===false);
+        tg.querySelector(".yes").setAttribute("aria-pressed", redAns[i]===true ? "true" : "false");
+        tg.querySelector(".no").setAttribute("aria-pressed", redAns[i]===false ? "true" : "false");
         let c=0; for(let k=0;k<RF;k++) if(redAns[k]!==null) c++;
         panel.querySelector(".pill-count").textContent=c+'/'+RF+' answered';
         panel.querySelector(".block-name .num").textContent='×'+trustCoef().toFixed(2);
@@ -534,23 +564,31 @@
     return { weak:asc.slice(0,2), strong:[...arr].sort((a,b)=>b.v-a.v)[0], min:asc[0].v, max:asc[asc.length-1].v };
   }
   function archetype(){
-    const b=buildScore(), sw=strongestWeakest(), spread=sw.max-sw.min;
+    const b=buildScore(), sw=strongestWeakest(), spread=sw.max-sw.min, m=finalMultFrom(b, trustCoef());
     const story=(blockScore(0)+blockScore(1))/2;                 // Frame + Aim (upstream)
     const dist=(blockScore(2)+blockScore(4)+blockScore(5))/3;    // Wedge + Network + Expansion (spread)
-    if(b>70 && spread<25) return {name:"Compounding Machine", line:"Rare air — every component is pulling its weight."};
+    if(b>70 && spread<25){
+      if(trustCoef()<0.9) return {name:"Machine with a Trust Leak", line:"Every component is built — but red flags are taxing the whole engine. Clear them before you build anything else."};
+      return {name:"Compounding Machine", line:"Rare air — every component is pulling its weight."};
+    }
     if(story>=60 && dist<=40) return {name:"Great Story, No Distribution", line:"You’ve defined the market but aren’t spreading through it — a story on rented channels is still a consumable."};
     if(dist>=60 && story<=40) return {name:"Spreads, but Undefined", line:"You spread fast but own no category — growth without a moat, and fragile until you do the upstream work."};
-    if(spread>=40 && sw.max>=65 && b>=40) return {name:sw.strong.name+"-led Engine", line:"One pillar is carrying you. Powerful — and fragile if it stalls."};
-    if(b<35) return {name:"Cost Center", line:"Marketing is spend here, not an asset — but every axis is a lever you can pull."};
+    let tops=0; for(let i=0;i<N;i++) if(blockScore(i)===sw.max) tops++;
+    if(spread>=40 && sw.max>=65 && b>=40 && tops===1) return {name:sw.strong.name+"-led Engine", line:"One pillar is carrying you. Powerful — and fragile if it stalls."};
+    if(m<1) return {name:"Cost Center", line:"Marketing is spend here, not an asset — but every axis is a lever you can pull."};
+    if(b>=50) return {name:"Engine Taking Shape", line:"Most components are working — deepen the weakest one and the whole engine starts to compound."};
     return {name:"Emerging Multiplier", line:"Foundations are forming — pick one axis and go deep."};
   }
   function maturity(){
     const b=buildScore();
+    const up=(blockScore(0)+blockScore(1))/2;
+    const cp=(blockScore(2)+blockScore(3)+blockScore(4))/3;
+    const ex=blockScore(5);
     if(b<20) return "L1 · Communication";
-    if(b<40) return "L2 · Lead Generation";
-    if(b<60) return "L3 · Demand Creation";
-    if(b<80) return "L4 · Revenue Engine";
-    return "L5 · Revenue Multiplier";
+    else if(up<60) return "L2 · Lead Generation";
+    else if(cp<60 || b<60) return "L3 · Demand Creation";
+    else if(ex<60 || b<80) return "L4 · Revenue Engine";
+    else return "L5 · Revenue Multiplier";
   }
   function compReport(i){
     const v=blockScore(i);
@@ -559,14 +597,37 @@
     return {tag:"Weak", cls:"warn", text:BLOCKS[i].play, v:v};
   }
   function renderFinal(){
+    if(answeredCount()===0){
+      panel.innerHTML='<div class="card">'+
+        '<h2 class="final-title" tabindex="-1">Your result appears here</h2>'+
+        '<div class="final-line">Answer at least one round to see where your marketing compounds.</div>'+
+        '<div class="final-cta"><button class="btn primary" id="startFrame">Start with Frame →</button></div>'+
+      '</div>';
+      document.getElementById("startFrame").addEventListener("click",()=>{ step=0; pendingFocus=true; renderPanel(); });
+      return;
+    }
     const b=Math.round(buildScore()), coef=trustCoef(), base=baseMult(buildScore()), m=finalMultFrom(buildScore(),coef),
           a=archetype(), matur=maturity(), sw=strongestWeakest(), flags=flagCount();
+    const shown=mult1(m), shownBase=mult1(base);
+    const trustOpen=flagsUnansweredNoneYes();
     // ----- short headline action -----
     let graveIdx=-1; for(let i=0;i<RF;i++) if(redAns[i]===true){ if(REDFLAGS[i].grave){ graveIdx=i; break; } if(graveIdx<0) graveIdx=i; }
-    let topAction;
-    if(graveIdx>=0) topAction='<div class="rec"><span class="rec-badge stop">STOP</span><span><span class="rec-name">'+REDFLAGS[graveIdx].t+'</span> <span class="rec-play">'+REDFLAGS[graveIdx].fix+'</span></span></div>';
-    else { const w=sw.weak[0], bl=BLOCKS[w.i]; topAction='<div class="rec"><span class="rec-badge">'+Math.round(w.v)+'</span><span><span class="rec-name">'+bl.name+'.</span> <span class="rec-play">'+bl.play+'</span></span></div>'; }
-    const trustLine = flags>0 ? ' <b>'+flags+' red flag'+(flags>1?'s are':' is')+'</b> taxing it (trust ×'+coef.toFixed(2)+').' : ' Trust is clean — nothing is dragging you down.';
+    const maintain = flags===0 && sw.min>=70;
+    let topAction, recHead;
+    if(maintain){
+      recHead="Keep it compounding";
+      topAction='<div class="rec"><span class="rec-badge">★</span><span><span class="rec-name">Maintain Level Five.</span> <span class="rec-play">There is no Level Six — Level Five is maintained against constant downward pressure. Keep repeating your frame, protect trust fanatically, and re-run this scorecard every quarter.</span></span></div>';
+    } else if(graveIdx>=0){
+      recHead="Fix this first";
+      topAction='<div class="rec"><span class="rec-badge stop">STOP</span><span><span class="rec-name">'+REDFLAGS[graveIdx].t+'</span> <span class="rec-play">'+REDFLAGS[graveIdx].fix+'</span></span></div>';
+    } else {
+      recHead="Build this next";
+      const w=sw.weak[0], bl=BLOCKS[w.i];
+      topAction='<div class="rec"><span class="rec-badge">'+Math.round(w.v)+'</span><span><span class="rec-name">'+bl.name+'.</span> <span class="rec-play">'+bl.play+'</span></span></div>';
+    }
+    const trustLine = flags>0
+      ? ' <b>'+flags+' red flag'+(flags>1?'s are':' is')+'</b> taxing it (trust ×'+coef.toFixed(2)+').'
+      : (trustOpen ? ' Red flags not answered yet — trust is assumed clean.' : ' Trust is clean — nothing is dragging you down.');
 
     // ----- full report (hidden until expanded) -----
     let comps="";
@@ -577,36 +638,49 @@
         '<div class="ctext">'+r.text+'</div></div>'; }
     let fixes="";
     for(let i=0;i<RF;i++) if(redAns[i]===true) fixes+='<div class="fix"><span class="fix-ic">⚑</span><span><b>'+REDFLAGS[i].t+'</b> <span class="f2">'+REDFLAGS[i].fix+'</span></span></div>';
-    if(!fixes) fixes='<div class="ctext">No red flags — you’re protecting trust. That’s the rarest and most valuable thing here.</div>';
+    if(!fixes) fixes = trustOpen
+      ? '<div class="ctext">You haven’t answered the red flags yet — answer them for an honest trust reading.</div>'
+      : '<div class="ctext">No red flags — you’re protecting trust. That’s the rarest and most valuable thing here.</div>';
     const mmInterp = m<1 ? "Right now you’re spending to stand still — the fixes above are how you cross ×1." : "Every $1 of marketing is returning $"+m.toFixed(2)+". Clear the red flags and deepen the weak shapes to push it higher.";
-    const mm='Your build score of <b>'+b+'</b> maps to a <b>×'+base.toFixed(1)+'</b> base. '+(flags>0?'Trust taxes it by <b>×'+coef.toFixed(2)+'</b> ('+flags+' red flag'+(flags>1?'s':'')+'), landing at ':'Trust is clean, landing at ')+'<b>×'+m.toFixed(1)+'</b>. '+mmInterp+' These six aren’t a checklist — they’re a system, and the mix shifts with who you serve.';
+    const mm='Your build score of <b>'+b+'</b> maps to a <b>×'+shownBase+'</b> base. '+(flags>0?'Trust taxes it by <b>×'+coef.toFixed(2)+'</b> ('+flags+' red flag'+(flags>1?'s':'')+'), landing at ':'Trust is clean, landing at ')+'<b>×'+shown+'</b>. '+mmInterp+' These six aren’t a checklist — they’re a system, and the mix shifts with who you serve.';
+    const xAns=answeredCount(), yFlags=flagsAnswered();
+    const provisional = (xAns<TOTAL || yFlags<RF)
+      ? '<div class="disclaimer">Provisional: you\'ve answered '+xAns+' of 30 questions and '+yFlags+' of 8 red flags. Unanswered questions count as No, unanswered red flags as clean.</div>'
+      : "";
+    const emailBlock = SUBSCRIBE_ENDPOINT ? (
+      '<div class="email-cta" id="emailCta">'+
+        '<div class="ec-title">Want this analysis in your inbox?</div>'+
+        '<div class="ec-sub">We’ll email your framework and the exact chapters to read next.</div>'+
+        '<div class="ec-row"><input type="email" id="emailInput" placeholder="you@company.com" autocomplete="email" aria-label="Email address" />'+
+        '<button class="btn primary" id="emailSend" disabled>Send it to me</button></div>'+
+        '<label class="ec-consent"><input type="checkbox" id="emailConsent" /><span>I agree to receive this analysis and occasional updates about <em>Marketing as a Revenue Multiplier</em>. Unsubscribe anytime.</span></label>'+
+      '</div>'
+    ) : "";
 
     panel.innerHTML='<div class="card">'+
-      '<div class="step-eyebrow"><span class="st">Your result</span><span class="pill-count">build '+b+' · ×'+m.toFixed(1)+'</span></div>'+
-      '<div class="final-arche" style="margin-top:14px">Archetype · <span style="color:var(--muted)">'+matur+'</span></div><div class="final-title">'+a.name+'</div>'+
-      '<div class="final-line">'+a.line+' Your marketing is roughly a <b>×'+m.toFixed(1)+' revenue multiplier</b>.'+trustLine+'</div>'+
+      '<div class="step-eyebrow"><span class="st">Your result</span><span class="pill-count">build '+b+' · ×'+shown+'</span></div>'+
+      '<div class="final-arche" style="margin-top:14px">Maturity level · <span style="color:var(--muted)">'+matur+'</span></div><h2 class="final-title" tabindex="-1">'+a.name+'</h2>'+
+      '<div class="final-line">'+a.line+' Your marketing is roughly a <b>×'+shown+' revenue multiplier</b>.'+trustLine+'</div>'+
       '<div class="disclaimer">A quick, directional read of where your marketing compounds — not a full audit.</div>'+
-      '<div class="recs"><h3>'+(graveIdx>=0?'Fix this first':'Build this next')+'</h3>'+topAction+'</div>'+
+      provisional+
+      '<div class="recs"><h3>'+recHead+'</h3>'+topAction+'</div>'+
       '<button class="more-btn" id="moreBtn">Read the full analysis ↓</button>'+
       '<div class="full" id="full"><div class="full-inner">'+
         '<div class="rep-h3">Your six components</div>'+comps+
         '<div class="rep-h3">Red flags to clear</div>'+fixes+
         '<div class="rep-h3">What your multiplier means</div><div class="mm">'+mm+'</div>'+
-        '<div class="email-cta" id="emailCta">'+
-          '<div class="ec-title">Want this analysis in your inbox?</div>'+
-          '<div class="ec-sub">We’ll email your framework and the exact chapters to read next.</div>'+
-          '<div class="ec-row"><input type="email" id="emailInput" placeholder="you@company.com" autocomplete="email" />'+
-          '<button class="btn primary" id="emailSend" disabled>Send it to me</button></div>'+
-          '<label class="ec-consent"><input type="checkbox" id="emailConsent" /><span>I agree to receive this analysis and occasional updates about <em>Marketing as a Revenue Multiplier</em>. Unsubscribe anytime.</span></label>'+
-        '</div>'+
+        emailBlock+
       '</div></div>'+
-      '<div class="final-cta"><button class="btn ghost" id="restart">← Edit answers</button></div>'+
+      '<div class="final-cta"><button class="btn ghost" id="restart">← Edit answers</button>'+
+        '<a class="btn primary" href="'+BOOK_URL+'" target="_blank" rel="noopener">Get the book →</a>'+
+        '<a class="btn ghost" href="'+BOOK_URL+'" target="_blank" rel="noopener">Listen to half the book free →</a></div>'+
     '</div>';
 
-    document.getElementById("restart").addEventListener("click",()=>{ step=0; renderPanel(); });
+    document.getElementById("restart").addEventListener("click",()=>{ step=0; pendingFocus=true; renderPanel(); });
     const full=document.getElementById("full"), moreBtn=document.getElementById("moreBtn");
     moreBtn.addEventListener("click",()=>{ const open=full.classList.toggle("open"); moreBtn.textContent=open?"Hide the full analysis ↑":"Read the full analysis ↓"; });
 
+    if(!SUBSCRIBE_ENDPOINT) return;
     const email=document.getElementById("emailInput"), consent=document.getElementById("emailConsent"), send=document.getElementById("emailSend");
     const valid=()=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()) && consent.checked;
     const sync=()=>{ send.disabled=!valid(); };
@@ -614,8 +688,7 @@
     const okMsg=addr=>'<div class="ec-done">✓ Done — your analysis is on its way to <b>'+addr+'</b>. Check your inbox (and spam, just in case).</div>';
     send.addEventListener("click",async ()=>{ if(!valid()) return;
       const addr=email.value.trim(), cta=document.getElementById("emailCta");
-      const payload={ email:addr, consent:true, build:b, multiplier:+m.toFixed(1), archetype:a.name, level:matur, weak:sw.weak.map(o=>BLOCKS[o.i].name), flags:flagCount() };
-      if(!SUBSCRIBE_ENDPOINT){ cta.innerHTML=okMsg(addr)+'<div class="ec-sub" style="margin-top:6px">(Demo mode — connect MailerLite to send for real.)</div>'; return; }
+      const payload={ email:addr, consent:true, build:b, multiplier:+shown, archetype:a.name, level:matur, weak:sw.weak.map(o=>BLOCKS[o.i].name), flags:flagCount() };
       send.disabled=true; send.textContent="Sending…";
       try{
         const r=await fetch(SUBSCRIBE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
