@@ -240,7 +240,7 @@
         <div class="mult-sub" id="multSub">trust · not answered</div>
         <div class="io">
           <div class="io-row"><span class="io-lbl">$1 spend</span><div class="io-bar in" style="width:38px"></div></div>
-          <div class="io-row"><span class="io-lbl">return</span><div class="io-bar out" id="outBar" style="width:8px"></div><span class="io-amt" id="outAmt">$0.20</span></div>
+          <div class="io-row"><span class="io-lbl">return</span><div class="io-bar out" id="outBar" style="width:8px"></div><span class="io-amt" id="outAmt">$—</span></div>
         </div>
         <div class="mult-note" id="multNote">Answer the rounds to build it up — a great marketing engine can return many times what you put in.</div>
       </div>
@@ -254,7 +254,7 @@
   </div>
 
   <div class="foot">
-    <span>Revenue Multiplier Framework · <span class="tag">v0.17</span></span>
+    <span>Revenue Multiplier Framework · <span class="tag">v0.18</span></span>
     <span>Marketing as a Revenue Multiplier — Volodymyr Khomichenko</span>
   </div>
 
@@ -346,6 +346,7 @@
   function baseMult(s){ return 0.2 + 7.8*Math.pow(s/100,1.4); }
   function finalMultFrom(s,coef){ return baseMult(s)*coef; }
   function mult1(m){ return (Math.floor(m*10)/10).toFixed(1); }
+  function cents(m){ return (Math.floor(m*100)/100).toFixed(2); }
   function flagsAnswered(){ let c=0; for(let i=0;i<RF;i++) if(redAns[i]!==null) c++; return c; }
   function flagsUnansweredNoneYes(){ let open=false; for(let i=0;i<RF;i++){ if(redAns[i]===true) return false; if(redAns[i]===null) open=true; } return open; }
   function escAttr(s){ return String(s).replace(/&/g,"\u0026amp;").replace(/"/g,"\u0026quot;"); }
@@ -413,7 +414,7 @@
       multState.style.color="";
       outBar.style.width="8px";
       outBar.style.background="#c3cbd6";
-      outAmt.textContent="$0.20";
+      outAmt.textContent="$—";
       multSub.textContent="trust · not answered";
       multNote.textContent="Answer the rounds to build it up — a great marketing engine can return many times what you put in.";
       return;
@@ -421,17 +422,17 @@
     const base=baseMult(renderScore), coef=renderCoef, m=base*coef, flags=flagCount();
     multNum.textContent=mult1(m);
     outBar.style.width=Math.max(6,Math.min(290,38*m))+"px";
-    outAmt.textContent="$"+m.toFixed(2);
+    outAmt.textContent="$"+cents(m);
     const trustBit = flags>0
       ? 'trust <span class="bad">×'+coef.toFixed(2)+"</span> ("+flags+" red flag"+(flags>1?"s":"")+")"
       : (flagsUnansweredNoneYes() ? "trust · not answered" : "trust ✓ clean");
     multSub.innerHTML = "build ×"+mult1(base)+" · " + trustBit;
     if(m<1){ multState.textContent="Cost — losing"; multState.style.color="#8a94a3"; outBar.style.background="#c3cbd6";
-      multNote.innerHTML="Every $1 of marketing returns <b>$"+m.toFixed(2)+"</b> — you’re spending to stand still."; }
+      multNote.innerHTML="Every $1 of marketing returns <b>$"+cents(m)+"</b> — you’re spending to stand still."; }
     else { multState.style.color="#2563eb"; outBar.style.background="#2563eb";
       multState.textContent = m<2?"Break-even+":(m<3.5?"Growing":(m<6?"Compounding":"Runaway multiplier"));
       const drag = flags>0 ? " Clear the red flags and it climbs further." : " Keep building to compound it.";
-      multNote.innerHTML="Every $1 of marketing returns <b>$"+m.toFixed(2)+"</b>."+drag; }
+      multNote.innerHTML="Every $1 of marketing returns <b>$"+cents(m)+"</b>."+drag; }
   }
 
   function updateProgress(){
@@ -641,8 +642,11 @@
     if(!fixes) fixes = trustOpen
       ? '<div class="ctext">You haven’t answered the red flags yet — answer them for an honest trust reading.</div>'
       : '<div class="ctext">No red flags — you’re protecting trust. That’s the rarest and most valuable thing here.</div>';
-    const mmInterp = m<1 ? "Right now you’re spending to stand still — the fixes above are how you cross ×1." : "Every $1 of marketing is returning $"+m.toFixed(2)+". Clear the red flags and deepen the weak shapes to push it higher.";
-    const mm='Your build score of <b>'+b+'</b> maps to a <b>×'+shownBase+'</b> base. '+(flags>0?'Trust taxes it by <b>×'+coef.toFixed(2)+'</b> ('+flags+' red flag'+(flags>1?'s':'')+'), landing at ':'Trust is clean, landing at ')+'<b>×'+shown+'</b>. '+mmInterp+' These six aren’t a checklist — they’re a system, and the mix shifts with who you serve.';
+    const mmInterp = m<1 ? "Right now you’re spending to stand still — the fixes above are how you cross ×1." : "Every $1 of marketing is returning $"+cents(m)+". Clear the red flags and deepen the weak shapes to push it higher.";
+    const trustLanding = flags>0
+      ? 'Trust taxes it by <b>×'+coef.toFixed(2)+'</b> ('+flags+' red flag'+(flags>1?'s':'')+'), landing at '
+      : (trustOpen ? 'Trust is assumed clean (red flags not answered yet), landing at ' : 'Trust is clean, landing at ');
+    const mm='Your build score of <b>'+b+'</b> maps to a <b>×'+shownBase+'</b> base. '+trustLanding+'<b>×'+shown+'</b>. '+mmInterp+' These six aren’t a checklist — they’re a system, and the mix shifts with who you serve.';
     const xAns=answeredCount(), yFlags=flagsAnswered();
     const provisional = (xAns<TOTAL || yFlags<RF)
       ? '<div class="disclaimer">Provisional: you\'ve answered '+xAns+' of 30 questions and '+yFlags+' of 8 red flags. Unanswered questions count as No, unanswered red flags as clean.</div>'
